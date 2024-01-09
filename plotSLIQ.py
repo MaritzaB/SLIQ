@@ -31,7 +31,8 @@ def graph_tree(tree):
 	# output
 	graph.write_png('tree.png')
 
-data_file = 'data/data_exercise_2.csv'
+#data_file = 'data/data_book.csv'
+data_file = 'data/datatraining.csv'
 
 if __name__ == '__main__':
 	# construct decision tree
