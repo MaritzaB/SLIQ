@@ -14,8 +14,8 @@ def datasets(dataset, percent):
 	# extract numerical data
 	flag = int(percent * (len(f)-1))
 	data = [x.split(',') for x in f[1:] if len(x)>0]
-	for itemIndex in xrange(len(data)):
-		for attrIndex in xrange(attr['length']):
+	for itemIndex in range(len(data)):
+		for attrIndex in range(attr['length']):
 			if attr['type'][attrIndex] == 'n':
 				data[itemIndex][attrIndex] = int(data[itemIndex][attrIndex])
 	random.shuffle(data)
@@ -25,9 +25,9 @@ def datasets(dataset, percent):
 def subset(set):
 	subset = []
 	length = len(set)
-	for iteration in xrange(2**length):
+	for iteration in range(2**length):
 		curset = []
-		for digit in xrange(length):
+		for digit in range(length):
 			if iteration % 2:
 				curset.append(set[digit])
 			iteration /= 2
@@ -38,7 +38,7 @@ def subset(set):
 def presort(attr, dataset):
 	attrList = []
 	attr['value'] = {}
-	for attrIndex in xrange(attr['length']):
+	for attrIndex in range(attr['length']):
 		# all attribute combinations
 		if attr['type'][attrIndex] == 'b':	
 			attr['value'][attrIndex] = ['yes']
@@ -48,7 +48,7 @@ def presort(attr, dataset):
 			attr['value'][attrIndex] = subset(list(set([data[attrIndex] for data in dataset])))
 		# sorted attribute lists
 		currAttrList = []
-		for dataIndex in xrange(len(dataset)):
+		for dataIndex in range(len(dataset)):
 			currAttrList.append([dataset[dataIndex][attrIndex], dataIndex])
 		attrList.append(sorted(currAttrList))
 	return attrList, [[data[attr['length']],1] for data in dataset]
@@ -87,19 +87,17 @@ def print_value(name, attribute, value):
 
 # print histogram for each node during middle steps
 def print_histogram(node, value, countLy, countLn, countRy, countRn):
-	print 'N'+str(node)+' on '+value
-	print '\t|yes\t|no'
-	print 'L\t|'+str(countLy)+'\t|'+str(countLn)
-	print 'R\t|'+str(countRy)+'\t|'+str(countRn)
-	print
+	print('N'+str(node)+' on ' + value)
+	print('\t|yes\t|no')
+	print('L\t|'+str(countLy)+'\t|'+str(countLn))
+	print('R\t|'+str(countRy)+'\t|'+str(countRn))
 
 # print class index for each node during middle steps
 def print_class(classList, node):
-	print 'N'+str(node)+':'
-	for index in xrange(len(classList)):
+	print('N'+str(node)+':')
+	for index in range(len(classList)):
 		if classList[index][1] == node:
-			print str(index)+'\t|'+classList[index][0]
-	print
+			print(str(index)+'\t|'+classList[index][0])
 
 # detect whether a node is a leaf or not
 def is_leaf(classList, no):
@@ -109,14 +107,14 @@ def is_leaf(classList, no):
 	else:
 		return node[0] # yes/no
 
-# evaluate and split by all attribute and gini funciton
+# evaluate and split by all attribute and gini function
 def evaluate_split(attr, attrList, classList, node, middlestep, used):
 	dataNum= len(classList)
 	minGini = 1
 	minIndex = -1
 	minValue = 0
 	deadlock = False
-	for attrIndex in xrange(attr['length']):
+	for attrIndex in range(attr['length']):
 		if attrIndex in used:
 			continue
 		for value in attr['value'][attrIndex]:
@@ -126,7 +124,7 @@ def evaluate_split(attr, attrList, classList, node, middlestep, used):
 			countRy = 0
 			countRn = 0
 			# read attrList			
-			for item in xrange(dataNum):
+			for item in range(dataNum):
 				if classList[attrList[attrIndex][item][1]][1] != node:
 					continue
 				if judge(attrList[attrIndex][item][0], attr['type'][attrIndex], value):
@@ -187,7 +185,7 @@ def generate_tree(attr, attrList, classList, middlestep):
 		tree[left] = 'yes'
 		tree[right] = 'no'
 		# update node class id
-		for item in xrange(dataNum):
+		for item in range(dataNum):
 			if classList[attrList[minIndex][item][1]][1] != node:
 				continue
 			if judge(attrList[minIndex][item][0], attr['type'][minIndex], minValue):
@@ -219,7 +217,7 @@ def print_tree(tree, no, deep, output):
 	if tree[right] == 'yes' or tree[right] == 'no':
 		right = tree[right]
 	node = '%d %s %s %s %s' %(no, tree[no][0], tree[no][1], str(left), str(right))
-	print node
+	print(node)
 	output.write(node+'\n')
 	print_tree(tree, tree[no][2], deep+1, output)
 	print_tree(tree, tree[no][3], deep+1, output)
@@ -253,13 +251,12 @@ def train(fname, percent=2.0/3, middlestep=0):
 	attr, trainData, testData = datasets(file, percent)
 	attrList, classList = presort(attr, trainData)               
 	tree = generate_tree(attr, attrList, classList, middlestep)
-	print 'SLIQ:'
+	print('SLIQ:')
 	output = open('result.txt','w')
 	print_tree(tree, 1, 0, output)
 	output.close()
-	print
-	print 'Train Data Precision: %.4f' %test_tree(tree, trainData)
-	print 'Test  Data Precision: %.4f' %test_tree(tree, testData)
+	print('Train Data Precision: %.4f' %test_tree(tree, trainData))
+	print('Test  Data Precision: %.4f' %test_tree(tree, testData))
 	return tree
 
 if __name__ == '__main__':

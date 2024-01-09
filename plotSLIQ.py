@@ -1,5 +1,5 @@
 import pydot
-import SLIQ
+from src import SLIQ
 import sys
 
 # plot the decision tree
@@ -31,10 +31,12 @@ def graph_tree(tree):
 	# output
 	graph.write_png('tree.png')
 
+data_file = 'data/data_exercise_2.csv'
+
 if __name__ == '__main__':
 	# construct decision tree
 	if len(sys.argv) < 2:
-		tree = SLIQ.train('data_exercise_2.csv')
+		tree = SLIQ.train(data_file)
 	else:
 		tree = SLIQ.train(sys.argv[1])
 	# plot decision tree
