@@ -16,7 +16,7 @@ def datasets(dataset, percent):
 			if attr['type'][attrIndex] == 'n':
 				data[itemIndex][attrIndex] = int(data[itemIndex][attrIndex])
 	random.shuffle(data)
-	return attr, data[:flag], data[flag:]
+	return attr, data[:]
 
 # find all subsets of categorical attributes
 def subset(set):
@@ -245,7 +245,7 @@ def test_tree(tree, testData):
 def train(fname, percent=2.0/3, middlestep=0):
 	with open(fname) as f:
 	 	file = f.read()
-	attr, trainData, testData = datasets(file, percent)
+	attr, trainData = datasets(file, percent)
 	attrList, classList = presort(attr, trainData)               
 	tree = generate_tree(attr, attrList, classList, middlestep)
 	print('SLIQ:')
@@ -253,7 +253,7 @@ def train(fname, percent=2.0/3, middlestep=0):
 	print_tree(tree, 1, 0, output)
 	output.close()
 	print('Train Data Precision: %.4f' %test_tree(tree, trainData))
-	print('Test  Data Precision: %.4f' %test_tree(tree, testData))
+	#print('Test  Data Precision: %.4f' %test_tree(tree, testData))
 	return tree
 
 if __name__ == '__main__':
