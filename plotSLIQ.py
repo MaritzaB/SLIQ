@@ -2,6 +2,9 @@ import pydot
 from src import SLIQ
 import sys
 
+#data_file = 'data/salary.csv'
+data_file = 'data/dataoccupancy.csv'
+
 # plot the decision tree
 def graph_tree(tree):
 	graph = pydot.Dot(graph_type='digraph')
@@ -30,9 +33,6 @@ def graph_tree(tree):
 		queue.append(tree[node][3])
 	# output
 	graph.write_png('tree.png')
-
-#data_file = 'data/data_book.csv'
-data_file = 'data/datatraining.csv'
 
 if __name__ == '__main__':
 	# construct decision tree
